@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import *
+
+import pylab as p
 from PIL import ImageTk
 from PIL import Image
 from Card import Card
@@ -12,7 +14,7 @@ def BlackJackGame():
     root = tk.Tk()
     icon = Image.open('cards/blackjack.jpg')
     icon_photo = ImageTk.PhotoImage(icon)
-    root.title(string="BlackJack by Koba$Game$")
+    root.title(string="BlackJack")
     root.iconphoto(False, icon_photo)
 
     player = Player()
@@ -20,9 +22,10 @@ def BlackJackGame():
     deck = Deck()
     deck.shuffle()
 
-    global bet, framecount
-    bet = 0
-    framecount = 0
+    global playerCardT, dealerCardT, imageCount
+    playerCardT = 0
+    dealerCardT = 0
+    imageCount = 0
 
     def clear_frame():
         for widgets in frame_list[globals()['framecount']].winfo_children():
@@ -48,19 +51,52 @@ def BlackJackGame():
 
     def addImage(fileName):
         card = Image.open(fileName)
-        cim = card.resize((95,145), Image.ANTIALIAS)
+        cim = card.resize((95,145))
         im_card = ImageTk.PhotoImage(cim)
         image_list.append(im_card)
 
+    global bet
+    bet = 0
     def start_game():
         player.addChips(float(buyInEntry.get()))
         globals()['bet'] = float(betEntry.get())
         deal()
 
+    global framecount
+    framecount = 0
     def deal():
         clear_frame()
         globals()['framecount'] += 1
         frame_list[globals()['framecount']].pack(padx=1, pady=1)
+        player.loseChips(globals()['bet'])
+
+        player.draw(deck)
+        drawAdds(player.getSuit(), player.getVal())
+        label = Label(frame_list[globals()['framecount']], image=image_list[imageCount])
+        label.place(x=300 + globals()['playerCardT'], y=500)
+        globals()['imageCount'] += 1
+        globals()['playerCardT'] += 100
+
+        dealer.draw(deck)
+        drawAdds(dealer.getSuit(), dealer.getVal())
+        label = Label(frame_list[globals()['framecount']], image=image_list[imageCount])
+        label.place(x=300 + globals()['dealerCardT'], y=100)
+        globals()['imageCount'] += 1
+        globals()['dealerCardT'] += 100
+
+        player.draw(deck)
+        drawAdds(player.getSuit(), player.getVal())
+        label = Label(frame_list[globals()['framecount']], image=image_list[imageCount])
+        label.place(x=300 + globals()['playerCardT'], y=500)
+        globals()['imageCount'] += 1
+        globals()['playerCardT'] += 100
+
+        dealer.draw(deck)
+        drawAdds(dealer.getSuit(), dealer.getVal())
+        label = Label(frame_list[globals()['framecount']], image=image_list[imageCount])
+        label.place(x=300 + globals()['dealerCardT'], y=100)
+        globals()['imageCount'] += 1
+        globals()['dealerCardT'] += 100
 
     frame_list = []
     image_list = []

@@ -1,5 +1,5 @@
 class Card:
-    def __init__(self, value, suit):
-        self.value = value
+    def __init__(self, val, suit):
+        self.val = val
         self.suit = suit
     
