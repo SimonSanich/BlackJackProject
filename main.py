@@ -16,17 +16,18 @@ def BlackJackGame():
     icon_photo = ImageTk.PhotoImage(icon)
     root.title(string="BlackJack")
     root.iconphoto(False, icon_photo)
+    root.attributes('-fullscreen', True)
 
     player = Player()
     dealer = Dealer()
     deck = Deck()
     deck.shuffle()
 
-    global playerCardT, dealerCardT, imageCount
+    global playerCardT, dealerCardT, imageCount, BJbool
     playerCardT = 0
     dealerCardT = 0
     imageCount = 0
-
+    BJbool = False
     # function that clears frames
     def clear_frame():
         for widgets in frame_list[globals()['framecount']].winfo_children():
@@ -78,14 +79,14 @@ def BlackJackGame():
         globals()['framecount'] += 1
         frame_list[globals()['framecount']].pack(padx=1, pady=1)
         player.loseChips(globals()['bet'])
-    # adds a generated card to the player`s 'hand'
+        # adds a generated card to the player`s 'hand'
         player.draw(deck)
         drawAdds(player.getSuit(), player.getVal())
         label = Label(frame_list[globals()['framecount']], image=image_list[imageCount])
         label.place(x=300 + globals()['playerCardT'], y=500)
         globals()['imageCount'] += 1
         globals()['playerCardT'] += 100
-    # adds a generated card to the dealer`s 'hand'
+        # adds a generated card to the dealer`s 'hand'
         dealer.draw(deck)
         drawAdds(dealer.getSuit(), dealer.getVal())
         label = Label(frame_list[globals()['framecount']], image=image_list[imageCount])
@@ -108,18 +109,67 @@ def BlackJackGame():
         globals()['dealerCardT'] += 100
 
         score_P = Label(frame_list[globals()['framecount']], text=str(player.score()), width=7, font=('JQKAs Wild', 25))
-        score_P.place(x=330, y=680)
-        score_D = Label(frame_list[globals()['framecount']], text=str(dealer.score()), width=7, font=('JQKAs Wild', 25))
-        score_D.place(x=330, y=50)
+        score_P.place(x=350, y=680)
+    # temporarily disabled dealers score might return later
+    # score_D = Label(frame_list[globals()['framecount']], text=str(dealer.score()), width=7, font=('JQKAs Wild', 25))
+    # score_D.place(x=330, y=50)
+        hit_list[globals()['framecount']].place(x=350, y=400)
+        stand_list[globals()['framecount']].place(x=420, y=400)
+        Label(frame_list[globals()['framecount']],
+              width=15,
+              text='Total Chips: ' + str(player.chipCount()),
+              font=('JQKAs Wild', 25)). place(x=30, y=450)
+        Label(frame_list[globals()['framecount']], image=chip_image).place(x=30, y=400)
+        Label(frame_list[globals()['framecount']],
+              width=7,
+              text=str(globals()['bet']),
+              font=('JQKAs Wild', 25)).place(x=80, y=400)
+        playerBJcheck()
+    def playerBJcheck():
+        globals()["BJbool"] = True
+        if player.score() == 21:
+            hit_list[globals()['framecount']].destroy()
+            stand_list[globals()['framecount']].destroy()
+            Label(frame_list[globals()['framecount']],
+                  text='BlackJack!!',
+                  width=12,
+                  font=('JQKAs Wild', 25)).place(x=350, y=400)
+
+
+
+
+    def hit():
+        return
+
+    def dealers_turn():
+        return
 
     frame_list = []
     image_list = []
+    stand_list = []
+    hit_list = []
+    again_list = []
     # creates 2000 frames for every game cycle
+    # creates buttons for stand and hit located on every frame starting from 1
     for i in range(0, 2000):
         frame_list.append(LabelFrame(root,
                                      width=955,
                                      height=800,
                                      background='green'))
+        stand_list.append(Button(frame_list[i],
+                                 text='stand',
+                                 command=dealers_turn,
+                                 height=2,
+                                 width=5,
+                                 background='grey',
+                                 font=('JQKAs Wild', 15)))
+        hit_list.append(Button(frame_list[i],
+                               text='hit',
+                               command=hit,
+                               height=2,
+                               width=5,
+                               background='grey',
+                               font=('JQKAs Wild', 15)))
     frame_list[0].pack()
     welcomeLabel = Label(
         frame_list[0],
@@ -162,6 +212,9 @@ def BlackJackGame():
                       highlightbackground='darkgrey'))
     betLabel.place(x=200, y=750)
 
+    ci = Image.open('cards/chip.png')
+    chip_imag = ci.resize((40, 40))
+    chip_image = ImageTk.PhotoImage(chip_imag)
     root.mainloop()
 
 

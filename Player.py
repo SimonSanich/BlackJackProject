@@ -21,7 +21,8 @@ class Player:
     def getVal(self):
         c = self.hand[len(self.hand) - 1]
         return c.val
-
+    def chipCount(self):
+        return self.chips
     # Basically what does ace do in every game if your hand consists of ace and for example 5 it creates a soft 16
     # hand which equals to 16 and 6 at the same time, but you cannot go bust with this type of hand because
     # if you for example then get a 10 which means that you should have overdrawn, and you should have 26
