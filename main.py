@@ -29,6 +29,7 @@ def BlackJackGame():
     imageCount = 0
     BJbool = False
     # function that clears frames
+
     def clear_frame():
         for widgets in frame_list[globals()['framecount']].winfo_children():
             widgets.destroy()
@@ -74,6 +75,37 @@ def BlackJackGame():
     global framecount
     framecount = 0
 
+    def hit():
+        return
+
+    def dealers_turn():
+        return
+
+    def endgame():
+        return
+
+    def playerBJcheck():
+        globals()["BJbool"] = True
+        if player.score() == 21:
+            hit_list[globals()['framecount']].destroy()
+            stand_list[globals()['framecount']].destroy()
+            Label(frame_list[globals()['framecount']],
+                  text='BlackJack!!',
+                  width=12,
+                  font=('JQKAs Wild', 25)).place(x=350, y=400)
+            again_list[globals()['framecount']].place(x=350, y=430)
+            colorUp_list[globals()['framecount']].place(x=420, y=400)
+            player.addChips(globals()['bet']*2.5)
+            Label(frame_list[globals()['framecount']],
+                  text='+'+str(globals()['bet']*1.5),
+                  width=6,
+                  fg='green',
+                  font=('JQKAs Wild', 15)).place(x=100, y=800)
+
+    def dealerBJcheck():
+        if dealer.score() == 21:
+            Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
+
     def deal():
         clear_frame()
         globals()['framecount'] += 1
@@ -89,6 +121,7 @@ def BlackJackGame():
         # adds a generated card to the dealer`s 'hand'
         dealer.draw(deck)
         drawAdds(dealer.getSuit(), dealer.getVal())
+        globals()['downCardIndex'] = globals()['imageCount']
         label = Label(frame_list[globals()['framecount']], image=image_list[imageCount])
         label.place(x=300 + globals()['dealerCardT'], y=100)
         globals()['imageCount'] += 1
@@ -125,36 +158,19 @@ def BlackJackGame():
               text=str(globals()['bet']),
               font=('JQKAs Wild', 25)).place(x=80, y=400)
         playerBJcheck()
-    def playerBJcheck():
-        globals()["BJbool"] = True
-        if player.score() == 21:
-            hit_list[globals()['framecount']].destroy()
-            stand_list[globals()['framecount']].destroy()
-            Label(frame_list[globals()['framecount']],
-                  text='BlackJack!!',
-                  width=12,
-                  font=('JQKAs Wild', 25)).place(x=350, y=400)
-
-
-
-
-    def hit():
-        return
-
-    def dealers_turn():
-        return
 
     frame_list = []
     image_list = []
     stand_list = []
     hit_list = []
     again_list = []
+    colorUp_list = []
     # creates 2000 frames for every game cycle
     # creates buttons for stand and hit located on every frame starting from 1
     for i in range(0, 2000):
         frame_list.append(LabelFrame(root,
-                                     width=955,
-                                     height=800,
+                                     width=1920,
+                                     height=1080,
                                      background='green'))
         stand_list.append(Button(frame_list[i],
                                  text='stand',
@@ -170,6 +186,20 @@ def BlackJackGame():
                                width=5,
                                background='grey',
                                font=('JQKAs Wild', 15)))
+        again_list.append(Button(frame_list[i],
+                                 text='play again',
+                                 command=deal,
+                                 height=2,
+                                 width=5,
+                                 background='grey',
+                                 font=('JQKAs Wild', 15)))
+        colorUp_list.append(Button(frame_list[i],
+                                   text='play again',
+                                   command=dealers_turn,
+                                   height=2,
+                                   width=5,
+                                   background='grey',
+                                   font=('JQKAs Wild', 15)))
     frame_list[0].pack()
     welcomeLabel = Label(
         frame_list[0],
