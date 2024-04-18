@@ -31,6 +31,11 @@ def BlackJackGame():
     downCardIndex = 0
     # function that clears frames
 
+    def newGameFunc():
+        hit_list[globals()['framecount']].destroy()
+        stand_list[globals()['framecount']].destroy()
+        again_list[globals()['framecount']].place(x=500, y=700)
+        colorUp_list[globals()['framecount']].place(x=500, y=750)
     def clear_frame():
         for widgets in frame_list[globals()['framecount']].winfo_children():
             widgets.destroy()
@@ -81,14 +86,32 @@ def BlackJackGame():
         getCardString(player.getSuit(), player.getVal())
         Label(frame_list[globals()['framecount']],
               image=image_list[imageCount]).place(x=300+globals()['playerCardT'], y=500)
-        globals()[imageCount] += 1
-        globals()[playerCardT] += 100
+        globals()['imageCount'] += 1
+        globals()['playerCardT'] += 100
         score_P = Label(frame_list[globals()['framecount']], text=str(player.score()), width=7, font=('JQKAs Wild', 25))
         score_P.place(x=350, y=680)
-        return
+        if player.score() > 21:
+            newGameFunc()
+            Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
+            Label(frame_list[globals()['framecount']],
+                  text='Busted!',
+                  width=12,
+                  font=('JQKAs Wild', 25)).place(x=350, y=400)
+            Label(frame_list[globals()['framecount']],
+                  text='-'+str(globals()['bet']),
+                  width=6,
+                  fg='red',
+                  font=('JQKAs Wild', 25)).place(x=350, y=350)
 
     def dealers_turn():
-        return
+        Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
+        while dealer.score() < 17:
+            dealer.draw(deck)
+            getCardString(dealer.getSuit(), dealer.getVal())
+            Label(frame_list[globals()['framecount']],
+                  image=image_list[imageCount]).place(x=300 + globals()['dealerCardT'], y=500)
+            globals()['imageCount'] += 1
+            globals()['playerCardT'] += 100
 
     def endgame():
         return
@@ -96,10 +119,7 @@ def BlackJackGame():
     def playerBJcheck():
         globals()["BJbool"] = True
         if player.score() == 21:
-            hit_list[globals()['framecount']].destroy()
-            stand_list[globals()['framecount']].destroy()
-            again_list[globals()['framecount']].place(x=350, y=430)
-            colorUp_list[globals()['framecount']].place(x=420, y=400)
+            newGameFunc()
             if dealer.score() == 21:
                 player.addChips(globals()['bet'])
                 Label(frame_list[globals()['framecount']],
@@ -126,10 +146,7 @@ def BlackJackGame():
     def dealerBJcheck():
         if dealer.score() == 21:
             Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
-            hit_list[globals()['framecount']].destroy()
-            stand_list[globals()['framecount']].destroy()
-            again_list[globals()['framecount']].place(x=350, y=430)
-            colorUp_list[globals()['framecount']].place(x=420, y=400)
+            newGameFunc()
             Label(frame_list[globals()['framecount']],
                   text='Dealer has a BlackJack!',
                   width=12,
@@ -225,14 +242,14 @@ def BlackJackGame():
                                  text='play again',
                                  command=deal,
                                  height=2,
-                                 width=5,
+                                 width=10,
                                  background='grey',
                                  font=('JQKAs Wild', 15)))
         colorUp_list.append(Button(frame_list[i],
                                    text='play again',
                                    command=dealers_turn,
                                    height=2,
-                                   width=5,
+                                   width=10,
                                    background='grey',
                                    font=('JQKAs Wild', 15)))
     frame_list[0].pack()
