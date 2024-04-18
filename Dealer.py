@@ -15,6 +15,9 @@ class Dealer:
         c = self.hand[len(self.hand) - 1]
         return c.val
 
+    def reset(self):
+        self.hand = []
+
     def score(self):
         aceHand = False
         sum = 0

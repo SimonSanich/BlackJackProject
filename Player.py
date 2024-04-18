@@ -32,6 +32,10 @@ class Player:
     # aceCard is a list which consists of the Aces, for correct score measurement they are added as the last element of
     # hand
     # Same explanation to DEALER.py
+
+    def reset(self):
+        self.hand = []
+
     def score(self):
         aceHand = False
         sum = 0

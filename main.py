@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import *
 
-import pylab as p
 from PIL import ImageTk
 from PIL import Image
 from Card import Card
@@ -112,8 +111,48 @@ def BlackJackGame():
                   image=image_list[imageCount]).place(x=300 + globals()['dealerCardT'], y=500)
             globals()['imageCount'] += 1
             globals()['playerCardT'] += 100
+        score_D = Label(frame_list[globals()['framecount']], text=str(dealer.score()), width=7, font=('JQKAs Wild', 25))
+        score_D.place(x=330, y=50)
+        if dealer.score() > 21:
+            newGameFunc()
+            player.addChips(globals()['bet'] * 2)
+            Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
+            Label(frame_list[globals()['framecount']],
+                  text='Dealer Busted!',
+                  width=12,
+                  font=('JQKAs Wild', 25)).place(x=350, y=400)
+            Label(frame_list[globals()['framecount']],
+                  text='+' + str(globals()['bet']),
+                  width=6,
+                  fg='green',
+                  font=('JQKAs Wild', 25)).place(x=350, y=350)
+        else:
+            checkWin()
+
+    def checkWin():
+        newGameFunc()
+        if player.score() > dealer.score():
+            player.addChips(globals()['bet'] * 2)
+            Label(frame_list[globals()['framecount']], text="Player Wins", width=12, font=('JQKAs Wild', 25)).place(
+                x=330,
+                y=680)
+            Label(frame_list[globals()['framecount']], text="+" + str(globals()['bet']), width=6, fg='green',
+                  font=('JQKAs Wild', 25)).place(x=150, y=550)
+        elif player.score() == dealer.score():
+            player.addChips(globals()['bet'])
+            Label(frame_list[globals()['framecount']], text="Bets Pushed", width=12, font=('JQKAs Wild', 25)).place(
+                x=330,
+                y=680)
+            Label(frame_list[globals()['framecount']], text="+0", width=6, font=('JQKAs Wild', 25)).place(x=150, y=550)
+        else:
+            Label(frame_list[globals()['framecount']], text="Dealer Wins", width=12, font=('JQKAs Wild', 25)).place(
+                x=330,
+                y=680)
+            Label(frame_list[globals()['framecount']], text="-" + str(globals()['bet']), width=6, fg='red',
+                  font=('JQKAs Wild', 25)).place(x=150, y=550)
 
     def endgame():
+
         return
 
     def playerBJcheck():
@@ -157,9 +196,14 @@ def BlackJackGame():
                   fg='green',
                   font=('JQKAs Wild', 15)).place(x=100, y=800)
 
-
     def deal():
         clear_frame()
+
+        player.reset()
+        dealer.reset()
+        globals()['playerCardT'] = 0
+        globals()['dealerCardT'] = 0
+
         globals()['framecount'] += 1
         frame_list[globals()['framecount']].pack(padx=1, pady=1)
         player.loseChips(globals()['bet'])
@@ -195,9 +239,6 @@ def BlackJackGame():
 
         score_P = Label(frame_list[globals()['framecount']], text=str(player.score()), width=7, font=('JQKAs Wild', 25))
         score_P.place(x=350, y=680)
-    # temporarily disabled dealers score might return later
-    # score_D = Label(frame_list[globals()['framecount']], text=str(dealer.score()), width=7, font=('JQKAs Wild', 25))
-    # score_D.place(x=330, y=50)
         hit_list[globals()['framecount']].place(x=350, y=400)
         stand_list[globals()['framecount']].place(x=420, y=400)
         Label(frame_list[globals()['framecount']],
@@ -246,7 +287,7 @@ def BlackJackGame():
                                  background='grey',
                                  font=('JQKAs Wild', 15)))
         colorUp_list.append(Button(frame_list[i],
-                                   text='play again',
+                                   text='color up',
                                    command=dealers_turn,
                                    height=2,
                                    width=10,
