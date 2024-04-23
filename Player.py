@@ -12,7 +12,7 @@ class Player:
         self.chips += v
 
     def loseChips(self, v):
-        self.chips += v
+        self.chips -= v
 
     def getSuit(self):
         c = self.hand[len(self.hand)-1]
@@ -21,6 +21,7 @@ class Player:
     def getVal(self):
         c = self.hand[len(self.hand) - 1]
         return c.val
+
     def chipCount(self):
         return self.chips
     # Basically what does ace do in every game if your hand consists of ace and for example 5 it creates a soft 16
