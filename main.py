@@ -236,7 +236,7 @@ def BlackJackGame():
         dealer.draw(deck)
         drawAdds(dealer.getSuit(), dealer.getVal())
         globals()['downCardIndex'] = globals()['imageCount']
-        label = Label(frame_list[globals()['framecount']], image=image_list[imageCount])
+        label = Label(frame_list[globals()['framecount']], image=dealerCard)
         label.place(x=300 + globals()['dealerCardT'], y=100)
         globals()['imageCount'] += 1
         globals()['dealerCardT'] += 100
@@ -357,6 +357,9 @@ def BlackJackGame():
     ci = Image.open('cards/chip.png')
     chip_imag = ci.resize((40, 40))
     chip_image = ImageTk.PhotoImage(chip_imag)
+    dj = Image.open('cards/deckColor.png')
+    deckColor = dj.resize((95, 145))
+    dealerCard = ImageTk.PhotoImage(deckColor)
     root.mainloop()
 
 
