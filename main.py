@@ -224,7 +224,7 @@ def BlackJackGame():
 
         globals()['framecount'] += 1
         frame_list[globals()['framecount']].pack(padx=1, pady=1)
-        player.loseChips(globals()['bet'])
+        #player.loseChips(globals()['bet'])
         # adds a generated card to the player`s 'hand'
         player.draw(deck)
         drawAdds(player.getSuit(), player.getVal())
@@ -277,6 +277,7 @@ def BlackJackGame():
     hit_list = []
     again_list = []
     colorUp_list = []
+    doubleButton_list = []
     # creates 2000 frames for every game cycle
     # creates buttons for stand and hit located on every frame starting from 1
     for i in range(0, 2000):
@@ -312,6 +313,13 @@ def BlackJackGame():
                                    width=20,
                                    background='grey',
                                    font=('JQKAs Wild', 15)))
+        doubleButton_list.append(Button(frame_list[i],
+                                        text='double down',
+                                        #command=doubleDown,
+                                        height=2,
+                                        width=20,
+                                        background='grey',
+                                        font=('JQKAs Wild', 15)))
     frame_list[0].pack()
     welcomeLabel = Label(
         frame_list[0],
