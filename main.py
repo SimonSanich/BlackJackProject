@@ -96,7 +96,6 @@ def BlackJackGame():
         score_P.place(x=350, y=680)
         if player.score() > 21:
             newGameFunc()
-            player.loseChips(globals()['bet'])
             Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
             Label(frame_list[globals()['framecount']],
                   text='Busted!',
@@ -109,6 +108,7 @@ def BlackJackGame():
                   font=('JQKAs Wild', 25)).place(x=350, y=350)
 
     def dealers_turn():
+        doubleButton_list[globals()['framecount']].destroy()
         Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
         while dealer.score() < 17:
             dealer.draw(deck)
@@ -121,7 +121,6 @@ def BlackJackGame():
         score_D.place(x=330, y=70)
         if dealer.score() > 21:
             newGameFunc()
-            doubleButton_list[globals()['framecount']].destroy()
             player.addChips(globals()['bet'] * 2)
             Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
             Label(frame_list[globals()['framecount']],
@@ -139,11 +138,12 @@ def BlackJackGame():
     def doubleDown():
         doubleButton_list[globals()['framecount']].destroy()
         globals()['doubleB'] = True
-        globals()['bet'] *= 2
         player.loseChips(globals()['bet'])
+        globals()['bet'] *= 2
+
         Label(frame_list[globals()['framecount']],
               width=15,
-              text='Chips ' + str(player.chipCount()),
+              text='Total Chips ' + str(player.chipCount()),
               font=('JQKAs Wild', 25)).place(x=30, y=450)
         player.draw(deck)
         getCardString(player.getSuit(), player.getVal())
@@ -167,7 +167,8 @@ def BlackJackGame():
                   width=6,
                   fg='red',
                   font=('JQKAs Wild', 25)).place(x=350, y=350)
-        dealers_turn()
+        else:
+            dealers_turn()
 
     def checkWin():
         newGameFunc()
@@ -185,7 +186,6 @@ def BlackJackGame():
                 y=680)
             Label(frame_list[globals()['framecount']], text="+0", width=6, font=('JQKAs Wild', 25)).place(x=150, y=550)
         else:
-            player.loseChips(globals()['bet'])
             Label(frame_list[globals()['framecount']], text="Dealer Wins", width=12, font=('JQKAs Wild', 25)).place(
                 x=330,
                 y=680)
@@ -193,7 +193,6 @@ def BlackJackGame():
                   font=('JQKAs Wild', 25)).place(x=150, y=550)
 
     def endgame():
-        print(globals()['totalChips'])
         finalChips = float(player.chipCount()) - globals()['totalChips']
         if finalChips >= 0:
             Label(root,
@@ -249,16 +248,15 @@ def BlackJackGame():
                   text='Dealer has a BlackJack!',
                   width=30,
                   font=('JQKAs Wild', 25)).place(x=350, y=400)
-            player.loseChips(globals()['bet'] * 2.5)
             Label(frame_list[globals()['framecount']],
-                  text='-' + str(globals()['bet'] * 1.5),
+                  text='-' + str(globals()['bet']),
                   width=8,
                   fg='red',
                   font=('JQKAs Wild', 25)).place(x=100, y=600)
 
     def deal():
         clear_frame()
-        if globals()['doubleB'] == True:
+        if globals()['doubleB']:
             globals()['bet'] /= 2
             globals()['doubleB'] = False
 
