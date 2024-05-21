@@ -69,8 +69,11 @@ class Player:
                     sum += c.val
         return sum
 
-    def splitToHolding(self):
+    def split(self):
         self.splitToHolding.append(self.hand.pop())
+
+    def drawHolding(self):
+        self.hand.append(self.splitToHolding.pop(0))
 
     def splitCheck(self):
         if self.hand[0].val == self.hand[1].val:

@@ -109,35 +109,43 @@ def BlackJackGame():
                   font=('JQKAs Wild', 25)).place(x=350, y=350)
 
     def dealers_turn():
-        doubleButton_list[globals()['framecount']].destroy()
-        Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
-        while dealer.score() < 17:
-            dealer.draw(deck)
-            getCardString(dealer.getSuit(), dealer.getVal())
-            Label(frame_list[globals()['framecount']],
-                  image=image_list[imageCount]).place(x=300 + globals()['dealerCardT'], y=100)
-            globals()['imageCount'] += 1
-            globals()['playerCardT'] += 100
-        score_D = Label(frame_list[globals()['framecount']], text=str(dealer.score()), width=7, font=('JQKAs Wild', 25))
-        score_D.place(x=330, y=70)
-        if dealer.score() > 21:
-            newGameFunc()
-            player.addChips(globals()['bet'] * 2)
-            Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
-            Label(frame_list[globals()['framecount']],
-                  text='Dealer Busted!',
-                  width=12,
-                  font=('JQKAs Wild', 25)).place(x=350, y=400)
-            Label(frame_list[globals()['framecount']],
-                  text='+' + str(globals()['bet']),
-                  width=6,
-                  fg='green',
-                  font=('JQKAs Wild', 25)).place(x=350, y=350)
+        if len(player.splitToHolding) > 0:
+            splitScore.append(player.score())
+            splitDeal()
         else:
-            checkWin()
+            doubleButton_list[globals()['framecount']].destroy()
+            splitButton_list[globals()['framecount']].destroy()
+            Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
+            while dealer.score() < 17:
+                dealer.draw(deck)
+                getCardString(dealer.getSuit(), dealer.getVal())
+                Label(frame_list[globals()['framecount']],
+                      image=image_list[imageCount]).place(x=300 + globals()['dealerCardT'], y=100)
+                globals()['imageCount'] += 1
+                globals()['playerCardT'] += 100
+            score_D = Label(frame_list[globals()['framecount']],
+                            text=str(dealer.score()), width=7, font=('JQKAs Wild', 25))
+            score_D.place(x=330, y=70)
+            if dealer.score() > 21:
+                newGameFunc()
+                player.addChips(globals()['bet'] * 2)
+                Label(frame_list[globals()['framecount']],
+                      image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
+                Label(frame_list[globals()['framecount']],
+                      text='Dealer Busted!',
+                      width=12,
+                      font=('JQKAs Wild', 25)).place(x=350, y=400)
+                Label(frame_list[globals()['framecount']],
+                      text='+' + str(globals()['bet']),
+                      width=6,
+                      fg='green',
+                      font=('JQKAs Wild', 25)).place(x=350, y=350)
+            else:
+                checkWin()
 
     def doubleDown():
         doubleButton_list[globals()['framecount']].destroy()
+        splitButton_list[globals()['framecount']].destroy()
         globals()['doubleB'] = True
         player.loseChips(globals()['bet'])
         globals()['bet'] *= 2
@@ -179,7 +187,8 @@ def BlackJackGame():
               image=image_list[imageCount]).place(x=300 + globals()['playerCardT'], y=500)
         globals()['imageCount'] += 1
         globals()['splitB'] = True
-        player.splitToHolding()
+        player.split()
+        dealer.split()
         globals()['playerCardT'] = 100
         player.draw(deck)
         getCardString(player.getSuit(), player.getVal())
@@ -190,12 +199,29 @@ def BlackJackGame():
         Label(frame_list[globals()['framecount']],
               text=str(player.score()),
               width=7,
-              font=('JQKAs Wild', 25)).place(x=350, y=680)
+              font=('JQKAs Wild', 25)).place(x=350, y=780)
         Label(frame_list[globals()['framecount']],
               text='Split Hand 1',
               width=12,
               font=('JQKAs Wild', 25)).place(x=280, y=850)
+        if not player.splitCheck():
+            splitButton_list[globals()['framecount']].destroy()
         playerBJcheck()
+
+    def splitDeal():
+        clear_frame()
+        globals()['framecount'] += 1
+        frame_list[globals()['framecount']].pack(padx=1, pady=1)
+        player.reset()
+        globals()['playerCardT'] = 0
+        globals()['dealerCardT'] = 0
+
+        player.drawHolding()
+        getCardString(player.getSuit(), player.getVal())
+        Label(frame_list[globals()['framecount']],
+              image=image_list[imageCount]).place(x=300 + globals()['playerCardT'], y=500)
+        globals()['imageCount'] += 1
+        globals()['playerCardT'] += 100
 
     def checkWin():
         newGameFunc()
@@ -270,6 +296,7 @@ def BlackJackGame():
         if dealer.score() == 21:
             Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
             doubleButton_list[globals()['framecount']].destroy()
+            splitButton_list[globals()['framecount']].destroy()
             newGameFunc()
             Label(frame_list[globals()['framecount']],
                   text='Dealer has a BlackJack!',
@@ -334,6 +361,7 @@ def BlackJackGame():
         if player.splitCheck():
             splitButton_list[globals()['framecount']].place(x=560, y=400)
 
+
         Label(frame_list[globals()['framecount']],
               width=15,
               text='Total Chips: ' + str(player.chipCount()),
@@ -354,6 +382,7 @@ def BlackJackGame():
     colorUp_list = []
     doubleButton_list = []
     splitButton_list = []
+    splitScore = []
     # creates 2000 frames for every game cycle
     # creates buttons for stand and hit located on every frame starting from 1
     for i in range(0, 2000):

@@ -2,6 +2,7 @@ class Dealer:
 
     def __init__(self):
         self.hand = []
+        self.splitToHolding = []
 
     def draw(self, deck):
         card = deck.draw()
@@ -48,3 +49,6 @@ class Dealer:
                 else:
                     sum += c.val
         return sum
+
+    def split(self):
+        self.splitToHolding.append(self.hand.pop())
