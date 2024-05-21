@@ -3,6 +3,7 @@ class Player:
     def __init__(self):
         self.hand = []
         self.chips = 0
+        self.splitToHolding = []
 
     def draw(self, deck):
         card = deck.draw()
@@ -67,3 +68,12 @@ class Player:
                 else:
                     sum += c.val
         return sum
+
+    def splitToHolding(self):
+        self.splitToHolding.append(self.hand.pop())
+
+    def splitCheck(self):
+        if self.hand[0].val == self.hand[1].val:
+            return True
+        else:
+            return False
