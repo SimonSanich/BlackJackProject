@@ -2,7 +2,7 @@ import random
 from Card import Card
 
 
-class Deck():
+class Deck:
     def __init__(self):
         self.cards = []
         self.build()
@@ -15,10 +15,6 @@ class Deck():
 
     def shuffle(self):
         random.shuffle(self.cards)
-        # for i in range(1, 15):
-        #   for j in range(len(self.cards) -1, 0, -1):
-        #     r = random.randint(0, i)
-        #    self.cards[i], self.cards[r] = self.cards[r], self.cards[i]
 
     def draw(self):
         return self.cards.pop()

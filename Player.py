@@ -69,8 +69,8 @@ class Player:
                     sum += c.val
         return sum
 
-    def split(self):
-        self.splitToHolding.append(self.hand.pop())
+    def splitHolding(self):
+        self.splitToHolding.append(self.hand.pop(0))
 
     def drawHolding(self):
         self.hand.append(self.splitToHolding.pop(0))
