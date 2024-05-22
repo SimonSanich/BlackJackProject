@@ -166,17 +166,21 @@ def BlackJackGame():
               width=7,
               font=('JQKAs Wild', 25)).place(x=350, y=680)
         if player.score() > 21:
-            newGameFunc()
-            Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
-            Label(frame_list[globals()['framecount']],
-                  text='Busted!',
-                  width=12,
-                  font=('JQKAs Wild', 25)).place(x=350, y=400)
-            Label(frame_list[globals()['framecount']],
-                  text='-' + str(globals()['bet']),
-                  width=6,
-                  fg='red',
-                  font=('JQKAs Wild', 25)).place(x=350, y=350)
+            if len(player.splitToHolding) > 0:
+                return
+            else:
+                newGameFunc()
+                Label(frame_list[globals()['framecount']],
+                      image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
+                Label(frame_list[globals()['framecount']],
+                    text='Busted!',
+                    width=12,
+                    font=('JQKAs Wild', 25)).place(x=350, y=400)
+                Label(frame_list[globals()['framecount']],
+                    text='-' + str(globals()['bet']),
+                    width=6,
+                    fg='red',
+                    font=('JQKAs Wild', 25)).place(x=350, y=350)
         else:
             dealers_turn()
 
@@ -269,6 +273,65 @@ def BlackJackGame():
               font=('JQKAs Wild', 25)).place(x=10, y=850)
         playerBJcheck()
         dealerBJcheck()
+
+    def splitResults():
+        newGameFunc()
+        doubleButton_list[globals()['framecount']].destroy()
+        splitButton_list[globals()['framecount']].destroy()
+        Label(frame_list[globals()['framecount']],
+              width=18,
+              text='Split Hand Results ',
+              font=('JQKAs Wild', 25)).place(x=280, y=850)
+        Label(frame_list[globals()['framecount']],
+              image=dealerCard).place(x=50, y=400)
+        Label(frame_list[globals()['framecount']],
+              width=18,
+              text=str(globals()['bet']),
+              font=('JQKAs Wild', 25)).place(x=100, y=400)
+        chipsCount = 0
+        lossCount = 0
+        winCount = 0
+        tieCount = 0
+        d_chipsCount = 0
+        d_lossCount = 0
+        d_winCount = 0
+        d_tieCount = 0
+        for i in splitScore:
+            if i > 21:
+                chipsCount -= globals()['bet']
+                lossCount += 1
+            elif dealer.score() > 21:
+                player.addChips(globals()['bet'] * 2)
+                chipsCount += globals()['bet']
+                winCount += 1
+            elif i> dealer.score():
+                player.addChips(globals()['bet'] * 2)
+                chipsCount += globals()['bet']
+                winCount += 1
+            elif i == dealer.score():
+                player.addChips(globals()['bet'])
+                tieCount += 1
+            else:
+                chipsCount -= globals()['bet']
+                lossCount += 1
+        for i in splitDouble:
+            if i > 21:
+                chipsCount -= globals()['bet']*2
+                d_lossCount += 1
+            elif dealer.score() > 21:
+                player.addChips(globals()['bet'] * 4)
+                chipsCount += globals()['bet']*2
+                winCount += 1
+            elif i > dealer.score():
+                player.addChips(globals()['bet'] * 4)
+                chipsCount += globals()['bet'] * 2
+                winCount += 1
+            elif i == dealer.score():
+                player.addChips(globals()['bet']*2)
+                tieCount += 1
+            else:
+                chipsCount -= globals()['bet']*2
+                lossCount += 1
 
     def checkWin():
         newGameFunc()
@@ -428,7 +491,9 @@ def BlackJackGame():
     colorUp_list = []
     doubleButton_list = []
     splitButton_list = []
+    dealerTurnButton_list = []
     splitScore = []
+    splitDouble = []
     # creates 2000 frames for every game cycle
     # creates buttons for stand and hit located on every frame starting from 1
     for i in range(0, 2000):
@@ -526,6 +591,7 @@ def BlackJackGame():
     dj = Image.open('cards/deckColor.png')
     deckColor = dj.resize((95, 145))
     dealerCard = ImageTk.PhotoImage(deckColor)
+
     root.mainloop()
 
 
