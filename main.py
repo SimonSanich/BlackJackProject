@@ -97,17 +97,27 @@ def BlackJackGame():
         score_P = Label(frame_list[globals()['framecount']], text=str(player.score()), width=7, font=('JQKAs Wild', 25))
         score_P.place(x=350, y=680)
         if player.score() > 21:
-            newGameFunc()
-            Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
-            Label(frame_list[globals()['framecount']],
-                  text='Busted!',
-                  width=12,
-                  font=('JQKAs Wild', 25)).place(x=350, y=400)
-            Label(frame_list[globals()['framecount']],
-                  text='-' + str(globals()['bet']),
-                  width=6,
-                  fg='red',
-                  font=('JQKAs Wild', 25)).place(x=350, y=350)
+            if len(player.splitToHolding) > 0:
+                newGameFunc()
+                nextSplitButton_List[globals()['frameCount']].place(x=350, y=400)
+                splitScore.append(player.score())
+            elif globals()['splitBool']:
+                newGameFunc()
+                splitScore.append(player.score())
+                dealerTurnButton_list[globals()['frameCount']].place(x=350, y=400)
+            else:
+                newGameFunc()
+                Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300,
+                                                                                                               y=100)
+                Label(frame_list[globals()['framecount']],
+                      text='Busted!',
+                      width=12,
+                      font=('JQKAs Wild', 25)).place(x=350, y=400)
+                Label(frame_list[globals()['framecount']],
+                      text='-' + str(globals()['bet']),
+                      width=6,
+                      fg='red',
+                      font=('JQKAs Wild', 25)).place(x=350, y=350)
 
     def dealers_turn():
         if len(player.splitToHolding) > 0:
@@ -323,7 +333,7 @@ def BlackJackGame():
                 player.addChips(globals()['bet'] * 2)
                 chipsCount += globals()['bet']
                 winCount += 1
-            elif i> dealer.score():
+            elif i > dealer.score():
                 player.addChips(globals()['bet'] * 2)
                 chipsCount += globals()['bet']
                 winCount += 1
@@ -335,26 +345,69 @@ def BlackJackGame():
                 lossCount += 1
         for i in splitDouble:
             if i > 21:
-                chipsCount -= globals()['bet']*2
+                chipsCount -= globals()['bet'] * 2
                 d_lossCount += 1
             elif dealer.score() > 21:
                 player.addChips(globals()['bet'] * 4)
-                chipsCount += globals()['bet']*2
+                chipsCount += globals()['bet'] * 2
                 d_winCount += 1
             elif i > dealer.score():
                 player.addChips(globals()['bet'] * 4)
                 chipsCount += globals()['bet'] * 2
                 d_winCount += 1
             elif i == dealer.score():
-                player.addChips(globals()['bet']*2)
+                player.addChips(globals()['bet'] * 2)
                 d_tieCount += 1
             else:
-                chipsCount -= globals()['bet']*2
+                chipsCount -= globals()['bet'] * 2
                 d_lossCount += 1
         for i in splitBJ:
-            player.addChips(globals()['bet']*2.5)
-            chipsCount += globals()['bet']*2.5
+            player.addChips(globals()['bet'] * 2.5)
+            chipsCount += globals()['bet'] * 2.5
             bjCount += 1
+        if (d_winCount > 0 or d_lossCount > 0 or d_tieCount > 0) and bjCount > 0:
+            Label(frame_list[globals()['framecount']],
+                  text='BlackJacks: ' + str(bjCount) +
+                       'Wins: ' + str(winCount) +
+                       'Loses: ' + str(lossCount) +
+                       'Tied: ' + str(tieCount) +
+                       'Double wins: ' + str(d_winCount) +
+                       'Double loses: ' + str(d_lossCount) +
+                       'Double ties: ' + str(d_tieCount),
+                  width=80,
+                  font=('JQKAs Wild', 25)).place(x=280, y=680)
+        elif d_winCount > 0 or d_lossCount > 0 or d_tieCount > 0:
+            Label(frame_list[globals()['frameCount']],
+                  text="Win " + str(winCount) +
+                       "Lost " + str(lossCount) +
+                       "Tied " + str(tieCount) +
+                       "Double Wins " + str(d_winCount) +
+                       "Double Lost " + str(d_lossCount) +
+                       "Double Tie " + str(d_tieCount),
+                  width=80,
+                  font=('JQKAs Wild', 25)).place(x=280, y=680)
+        elif bjCount > 0:
+            Label(frame_list[globals()['frameCount']],
+                  text="BlackJacks " + str(bjCount) +
+                       "Win " + str(winCount) +
+                       "Lost " + str(lossCount) +
+                       "Tied " + str(tieCount),
+                  width=50,
+                  font=('JQKAs Wild', 25)).place(x=280, y=680)
+        else:
+            Label(frame_list[globals()['frameCount']],
+                  text="Win " + str(winCount) +
+                       "Lost " + str(lossCount) +
+                       "Tied " + str(tieCount),
+                  width=20,
+                  font=('JQKAs Wild', 25)).place(x=280, y=680)
+        if chipsCount >= 0:
+            Label(frame_list[globals()['frameCount']], text='+' + str(chipsCount), width=6, fg='Green',
+                  font=('JQKAs Wild', 25)).place(x=155, y=550)
+        else:
+            Label(frame_list[globals()['frameCount']], text=str(chipsCount), width=6, fg='red',
+                  font=('JQKAs Wild', 25)).place(x=150, y=550)
+
     def checkWin():
         newGameFunc()
         if player.score() > dealer.score():
@@ -451,7 +504,11 @@ def BlackJackGame():
         if globals()['doubleB']:
             globals()['bet'] /= 2
             globals()['doubleB'] = False
-
+        splitScore.clear()
+        splitDouble.clear()
+        splitBJ.clear()
+        player.splitHoldingReset()
+        dealer.splitHoldingReset()
         player.reset()
         dealer.reset()
         globals()['playerCardT'] = 0
@@ -573,6 +630,21 @@ def BlackJackGame():
                                        width=5,
                                        background='grey',
                                        font=('JQKAs Wild', 15)))
+        nextSplitButton_List.append(
+            Button(frame_list[i], text="See Next Split",
+                   command=splitDeal,
+                   width=15,
+                   height=2,
+                   background='grey',
+                   font=('JQKAs Wild', 25)))
+        dealerTurnButton_list.append(
+            Button(frame_list[i],
+                   text="See Dealers Turn",
+                   command=dealers_turn,
+                   width=15,
+                   height=2,
+                   background='grey',
+                   font=('JQKAs Wild', 25)))
     frame_list[0].pack()
     welcomeLabel = Label(
         frame_list[0],

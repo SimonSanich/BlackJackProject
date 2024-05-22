@@ -80,3 +80,6 @@ class Player:
             return True
         else:
             return False
+
+    def splitHoldingReset(self):
+        self.splitToHolding.clear()

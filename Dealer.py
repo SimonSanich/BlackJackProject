@@ -55,3 +55,6 @@ class Dealer:
 
     def drawHolding(self):
         self.hand.append(self.splitToHolding.pop(0))
+
+    def splitHoldingReset(self):
+        self.splitToHolding.clear()
