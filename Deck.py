@@ -22,3 +22,7 @@ class Deck:
     def DeckReset(self):
         self.cards = []
         self.build()
+
+    def length(self):
+        return len(self.cards)
+
