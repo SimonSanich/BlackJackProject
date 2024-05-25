@@ -308,7 +308,7 @@ def BlackJackGame():
         Label(frame_list[globals()['framecount']],
               width=20,
               text='Split Hand Continued',
-              font=('JQKAs Wild', 25)).place(x=10, y=750)
+              font=('JQKAs Wild', 25)).place(x=10, y=785)
         playerBJcheck()
         dealerBJcheck()
 
@@ -317,15 +317,15 @@ def BlackJackGame():
         doubleButton_list[globals()['framecount']].destroy()
         splitButton_list[globals()['framecount']].destroy()
         Label(frame_list[globals()['framecount']],
-              width=18,
+              width=17,
               text='Split Hand Results ',
-              font=('JQKAs Wild', 25)).place(x=10, y=850)
+              font=('JQKAs Wild', 25)).place(x=10, y=740)
         # Label(frame_list[globals()['framecount']],
         # image=dealerCard).place(x=50, y=400)
         Label(frame_list[globals()['framecount']],
               width=5,
               text=str(globals()['bet']),
-              font=('JQKAs Wild', 25)).place(x=350, y=350)
+              font=('JQKAs Wild', 25)).place(x=80, y=400)
         chipsCount = 0
         lossCount = 0
         winCount = 0
