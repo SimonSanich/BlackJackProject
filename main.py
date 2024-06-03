@@ -14,7 +14,7 @@ def BlackJackGame():
     icon_photo = ImageTk.PhotoImage(icon)
     root.title(string="BlackJack")
     root.iconphoto(False, icon_photo)
-    # root.attributes('-fullscreen', True)
+    root.attributes('-fullscreen', True)
     root.configure(background='grey')
 
     player = Player()
@@ -125,7 +125,7 @@ def BlackJackGame():
             splitDeal()
         else:
             doubleButton_list[globals()['framecount']].destroy()
-            Label(frame_list[globals()['framecount']], image=image_list[imageCount]).place(x=300, y=100)
+            Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
             while dealer.score() < 17:
                 dealer.draw(deck)
                 getCardString(dealer.getSuit(), dealer.getVal())
@@ -318,8 +318,8 @@ def BlackJackGame():
               width=17,
               text='Split Hand Results ',
               font=('JQKAs Wild', 25)).place(x=10, y=740)
-        # Label(frame_list[globals()['framecount']],
-        # image=dealerCard).place(x=50, y=400)
+        Label(frame_list[globals()['framecount']],
+              image=chip_image).place(x=50, y=400)
         Label(frame_list[globals()['framecount']],
               width=5,
               text=str(globals()['bet']),
@@ -417,6 +417,7 @@ def BlackJackGame():
 
     def checkWin():
         newGameFunc()
+        splitButton_list[globals()['frameCount']].destroy()
         if player.score() > dealer.score():
             player.addChips(globals()['bet'] * 2)
             Label(frame_list[globals()['framecount']], text="Player Wins", width=12, font=('JQKAs Wild', 25)).place(
