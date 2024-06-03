@@ -14,7 +14,7 @@ def BlackJackGame():
     icon_photo = ImageTk.PhotoImage(icon)
     root.title(string="BlackJack")
     root.iconphoto(False, icon_photo)
-    # root.attributes('-fullscreen', True)
+    root.attributes('-fullscreen', True)
     root.configure(background='grey')
 
     player = Player()
@@ -231,8 +231,10 @@ def BlackJackGame():
         if not globals()['splitB']:
             dealer.splitHolding()
             dealer.splitHolding()
+
         globals()['splitB'] = True
         player.splitHolding()
+
         globals()['playerCardT'] = 100
         player.draw(deck)
         getCardString(player.getSuit(), player.getVal())
@@ -279,6 +281,7 @@ def BlackJackGame():
         getCardString(player.getSuit(), player.getVal())
         Label(frame_list[globals()['framecount']],
               image=image_list[imageCount]).place(x=300 + globals()['playerCardT'], y=500)
+
         globals()['imageCount'] += 1
         globals()['playerCardT'] += 100
 
@@ -320,8 +323,7 @@ def BlackJackGame():
               width=17,
               text='Split Hand Results ',
               font=('JQKAs Wild', 25)).place(x=10, y=740)
-        # Label(frame_list[globals()['framecount']],
-        # image=dealerCard).place(x=50, y=400)
+        Label(frame_list[globals()['framecount']], image=chip_image).place(x=50, y=400)
         Label(frame_list[globals()['framecount']],
               width=5,
               text=str(globals()['bet']),
@@ -641,15 +643,14 @@ def BlackJackGame():
         splitButton_list.append(Button(frame_list[i],
                                        text='split',
                                        command=split,
-                                       height=2,
                                        width=5,
+                                       height=2,
                                        background='grey',
                                        font=('JQKAs Wild', 15)))
         nextSplitButton_List.append(
             Button(frame_list[i], text="See Next Split",
                    command=splitDeal,
                    width=15,
-                   height=2,
                    background='grey',
                    font=('JQKAs Wild', 25)))
         dealerTurnButton_list.append(
@@ -657,7 +658,6 @@ def BlackJackGame():
                    text="See Dealers Turn",
                    command=dealers_turn,
                    width=15,
-                   height=2,
                    background='grey',
                    font=('JQKAs Wild', 25)))
     frame_list[0].pack()
