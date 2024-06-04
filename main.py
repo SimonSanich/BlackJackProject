@@ -126,16 +126,19 @@ def BlackJackGame():
         else:
             doubleButton_list[globals()['framecount']].destroy()
             Label(frame_list[globals()['framecount']], image=image_list[globals()['downCardIndex']]).place(x=300, y=100)
+
             while dealer.score() < 17:
                 dealer.draw(deck)
                 getCardString(dealer.getSuit(), dealer.getVal())
                 Label(frame_list[globals()['framecount']],
-                      image=image_list[imageCount]).place(x=300 + globals()['dealerCardT'], y=100)
+                      image=image_list[globals()['imageCount']]).place(x=300 + globals()['dealerCardT'], y=100)
+                globals()['dealerCardT'] += 100
                 globals()['imageCount'] += 1
-                globals()['playerCardT'] += 100
+
             score_D = Label(frame_list[globals()['framecount']],
                             text=str(dealer.score()), width=7, font=('JQKAs Wild', 25))
             score_D.place(x=330, y=50)
+
             if dealer.score() > 21:
                 if globals()["splitB"]:
                     splitScore.append(player.score())
@@ -417,7 +420,7 @@ def BlackJackGame():
 
     def checkWin():
         newGameFunc()
-        splitButton_list[globals()['frameCount']].destroy()
+        splitButton_list[globals()['framecount']].destroy()
         if player.score() > dealer.score():
             player.addChips(globals()['bet'] * 2)
             Label(frame_list[globals()['framecount']], text="Player Wins", width=12, font=('JQKAs Wild', 25)).place(
